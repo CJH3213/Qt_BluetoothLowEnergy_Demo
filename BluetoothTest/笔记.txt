@@ -1,0 +1,49 @@
+Qt版本6.7.2
+Qt Creator 14.0
+系统Win11 x64
+
+
+
+
+Qt蓝牙报“qt.bluetooth: Dummy backend running. Qt Bluetooth module is non-functional.”
+这是说，蓝牙功能失效，已经在后台虚拟化蓝牙维持软件继续运行，
+测试也发现既无法正常打开关闭本机蓝牙设备，也无法搜索到新设备。
+
+这是因为Qt构建套件(Kit)用的是MinGW，改为MSVC就能用了。
+
+先打开Qt维护软件Qt Maintenance Tool，
+在“选择组件”界面，展开“Qt 6.7.2”（你用哪个版本的Qt你就选哪个），
+把“MSVC 2019 64-bit”打勾√，注意不是“MSCV 2019 ARM64(TP)”，
+年号2019无所谓，我电脑安装的VS也不是2019，因为我们等一下没用到VS，
+然后点击下一步安装。
+
+安装完后再打开Qt Creator，打开之前创建的蓝牙项目，
+点击左侧边栏“项目”，在“构建和运行下”，
+应该能看到“Desktop Qt 6.7.2 MSVC2019 64bit”这个选项，灰色的，
+点击后就变成深黑色，说明当前项目已经添加上MSVC构建套件，
+在左侧边栏的下方，点击电视图标，将构建套件切换到Desktop Qt 6.7.2 MSVC2019 64bit”，
+再点击运行，这时Qt就会使用MSVC构建项目，
+软件打开后报错信息没有了，开关系统蓝牙设备、搜索其他设备也能正常使用。
+
+这里给Qt安装MSVC构建套件，但是没有在VS里编辑，仍是在Qt Creator编辑。
+至于怎么在VS开发Qt项目，这是另一个问题。
+
+
+
+
+如果安装完MSVC构建套件后，回到项目里编译，发现报以下错误：
+“无法打开包括文件 stddef.h assert.h”，很多基础的C库都报错了，
+切换回MinGW能编译但用MSVC无法编译，是缺失Windows SDK导致，
+我是在VS里面安装的：
+
+打开Visual Studio Installer，在已安装VS上点击修改，
+“工作负荷”右侧“使用C++的桌面开发”，勾选“Windows 11 SDK(xxx)”,
+点击右下角“修改”，等待下载安装完成，
+再回到Qt Creator用MSVC编译工程，已经不报错了。
+
+如果你没有VS，只想单独安装Windows SDK，可到微软官网下载：
+https://developer.microsoft.com/zh-cn/windows/downloads/windows-sdk/
+
+
+
+安装后若没有生效，请尝试重启。
