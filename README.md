@@ -1,4 +1,4 @@
-# Qt_BLE-BluetoothLowEnergy-_Demo
+# Qt_BluetoothLowEnergy_Demo
 Qt6.7 BLE蓝牙设备 简单通讯功能演示
 
 Qt / Bluetooth / BLE
